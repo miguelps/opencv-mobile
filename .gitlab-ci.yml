@@ -1,0 +1,69 @@
+image: macos-11
+
+stages:
+  - get
+  - build-ios
+  - build-sym
+  - make-xcf
+  - archive
+
+environment:
+  DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
+  EMSCRIPTEN_VERSION: 2.0.8
+  OPENCV_VERSION: 4.6.0
+  PACKAGENAME: opencv-mobile-4.6.0-ios
+
+get_project:
+  stage: get
+  script:
+    - echo "Package name:" ${env.PACKAGENAME}
+    - wget -q https://github.com/opencv/opencv/archive/${env.OPENCV_VERSION}.zip -O opencv-${env.OPENCV_VERSION}.zip
+    - unzip -q opencv-${env.OPENCV_VERSION}.zip
+    - cd opencv-${env.OPENCV_VERSION}
+    - patch -p1 -i ../opencv-4.6.0-no-zlib.patch
+  rules:
+    - if: "$CI_COMMIT_BRANCH == 'master'"
+
+build_project:
+  stage: build-ios
+  script:
+    - cd opencv-${env.OPENCV_VERSION}
+    - mkdir build-ios && cd build-ios
+    - cmake -DCMAKE_TOOLCHAIN_FILE=../../toolchains/ios.toolchain.cmake \
+        -DIOS_PLATFORM=OS -DENABLE_BITCODE=0 -DENABLE_ARC=0 -DENABLE_VISIBILITY=0 -DIOS_ARCH="arm64" \
+        -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat opencv4_cmake_options.txt` -DBUILD_opencv_world=ON \
+        -DOPENCV_DISABLE_FILESYSTEM_SU                                                                                                                                                                                                                                                                                                                                                                                                                                          PPORT=ON \
+        ..
+    - cmake --build . -j 3
+    - cmake --build . --target install
+  stage: build-sym
+  script:
+    - cd opencv-${env.OPENCV_VERSION}
+    - mkdir build-simulator && cd build-simulator
+    - cmake -DCMAKE_TOOLCHAIN_FILE=../../toolchains/ios.toolchain.cmake \
+        -DIOS_PLATFORM=SIMULATOR -DENABLE_BITCODE=0 -DENABLE_ARC=0 -DENABLE_VISIBILITY=0 -DIOS_ARCH="x86_64;arm64" \
+        -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat opencv4_cmake_options.txt` -DBUILD_opencv_world=ON \
+        -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
+        ..
+    - cmake --build . -j 3
+    - cmake --build . --target install
+
+make-xcframework:
+  stage: make-xcf
+  script:
+    - rm -rf opencv2.xcframework
+    - mkdir -p opencv2.xcframework/Headers
+    - cp -r opencv-${env.OPENCV_VERSION}/build-ios/install/include/opencv4/* opencv2.xcframework/Headers/
+    - xcodebuild -create-xcframework \
+        -library opencv-${env.OPENCV_VERSION}/build-ios/install/lib/libopencv_world.a \
+        -library opencv-${env.OPENCV_VERSION}/build-simulator/install/lib/libopencv_world.a \
+        -output opencv2.xcframework
+    - zip -9 -y -r ${env.PACKAGENAME}.zip opencv2.xcframework
+
+archive_project:
+  stage: archive
+  artifacts:
+    paths:
+      - ${env.PACKAGENAME}/${env.PACKAGENAME}.zip
+  # only:
+  #   - master
