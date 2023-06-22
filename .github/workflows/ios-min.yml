@@ -1,10 +1,10 @@
 name: ios-min
 
-# on: [pull_request,workflow_dispatch]
-on:
-  push:
-    tags:
-      - '*'
+on: [pull_request,workflow_dispatch]
+# on:
+#   push:
+#     tags:
+#       - '*'
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
@@ -95,8 +95,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ github.ref }}-iOS
+        release_name: Release ${{ github.ref }} iOS
         draft: false
         prerelease: false
 
