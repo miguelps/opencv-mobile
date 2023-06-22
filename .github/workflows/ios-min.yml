@@ -1,10 +1,10 @@
 name: ios-min
 
-on: [pull_request,workflow_dispatch]
-# on:
-#   push:
-#     tags:
-#       - '*'
+# on: [pull_request,workflow_dispatch]
+on:
+  push:
+    tags:
+      - '*'
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
@@ -62,11 +62,17 @@ jobs:
         rm -rf opencv2.xcframework
         mkdir -p opencv2.xcframework/Headers
         cp -r opencv-${{ env.OPENCV_VERSION }}/build-ios/install/include/opencv4/* opencv2.xcframework/Headers/
+        pushd opencv-${{ env.OPENCV_VERSION }}/build-ios/install/lib
+        cp libopencv_world.a libopencv.a
+        popd
+        pushd opencv-${{ env.OPENCV_VERSION }}/build-simulator/install/lib
+        cp libopencv_world.a libopencv.a
+        popd
         xcodebuild -create-xcframework \
-            -library opencv-${{ env.OPENCV_VERSION }}/build-ios/install/lib/libopencv_world.a \
-            -library opencv-${{ env.OPENCV_VERSION }}/build-simulator/install/lib/libopencv_world.a \
+            -library opencv-${{ env.OPENCV_VERSION }}/build-ios/install/lib/libopencv.a \
+            -library opencv-${{ env.OPENCV_VERSION }}/build-simulator/install/lib/libopencv.a \
             -output opencv2.xcframework
-        zip -9 -y -r ${{ env.PACKAGENAME }}.zip opencv2.xcframework
+        zip -q9yr ${{ env.PACKAGENAME }}.zip opencv2.xcframework
 
     - name: upload-zip
       uses: actions/upload-artifact@v3
