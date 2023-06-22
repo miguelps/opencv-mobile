@@ -1,6 +1,6 @@
 name: ios-min
 
-# on: [workflow_dispatch]
+# on: [pull_request,workflow_dispatch]
 on:
   push:
     tags:
@@ -21,7 +21,6 @@ jobs:
       run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
 
   ios-opencv4:
-    needs: [setup]
     runs-on: macos-11
     env:
       OPENCV_VERSION: 4.6.0
@@ -34,6 +33,7 @@ jobs:
         wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
         unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
         cd opencv-${{ env.OPENCV_VERSION }}
+        echo -n > cmake/OpenCVFindLibsGrfmt.cmake
         patch -p1 -i ../opencv-4.6.0-no-zlib.patch
     - name: build-ios
       run: |
@@ -102,6 +102,6 @@ jobs:
         PACKAGENAME: opencv-mobile-4.6.0-ios
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_name: ${{ env.PACKAGENAME }}.zip
         asset_path: artifacts/${{ env.PACKAGENAME }}/${{ env.PACKAGENAME }}.zip
+        asset_name: ${{ env.PACKAGENAME }}.zip
         asset_content_type: application/zip
