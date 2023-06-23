@@ -23,21 +23,20 @@ jobs:
   ios-opencv4:
     runs-on: macos-11
     env:
-      OPENCV_VERSION: 4.6.0
       PACKAGENAME: opencv-mobile-4.6.0-ios
     steps:
     - uses: actions/checkout@v3
     - name: opencv-source
       run: |
         echo "Package name:" ${{ env.PACKAGENAME }}
-        wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
-        unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
-        cd opencv-${{ env.OPENCV_VERSION }}
+        wget -q https://github.com/opencv/opencv/archive/4.6.0.zip -O opencv-4.6.0.zip
+        unzip -q opencv-4.6.0.zip
+        cd opencv-4.6.0
         echo -n > cmake/OpenCVFindLibsGrfmt.cmake
         patch -p1 -i ../opencv-4.6.0-no-zlib.patch
     - name: build-ios
       run: |
-        cd opencv-${{ env.OPENCV_VERSION }}
+        cd opencv-4.6.0
         mkdir build-ios && cd build-ios
         cmake -DCMAKE_TOOLCHAIN_FILE=../../toolchains/ios.toolchain.cmake \
             -DIOS_PLATFORM=OS -DENABLE_BITCODE=0 -DENABLE_ARC=0 -DENABLE_VISIBILITY=0 -DIOS_ARCH="arm64" \
@@ -48,7 +47,7 @@ jobs:
         cmake --build . --target install
     - name: build-simulator
       run: |
-        cd opencv-${{ env.OPENCV_VERSION }}
+        cd opencv-4.6.0
         mkdir build-simulator && cd build-simulator
         cmake -DCMAKE_TOOLCHAIN_FILE=../../toolchains/ios.toolchain.cmake \
             -DIOS_PLATFORM=SIMULATOR -DENABLE_BITCODE=0 -DENABLE_ARC=0 -DENABLE_VISIBILITY=0 -DIOS_ARCH="x86_64;arm64" \
@@ -61,16 +60,16 @@ jobs:
       run: |
         rm -rf opencv2.xcframework
         mkdir -p opencv2.xcframework/Headers
-        cp -r opencv-${{ env.OPENCV_VERSION }}/build-ios/install/include/opencv4/* opencv2.xcframework/Headers/
-        pushd opencv-${{ env.OPENCV_VERSION }}/build-ios/install/lib
+        cp -r opencv-4.6.0/build-ios/install/include/opencv4/* opencv2.xcframework/Headers/
+        pushd opencv-4.6.0/build-ios/install/lib
         cp libopencv_world.a libopencv.a
         popd
-        pushd opencv-${{ env.OPENCV_VERSION }}/build-simulator/install/lib
+        pushd opencv-4.6.0/build-simulator/install/lib
         cp libopencv_world.a libopencv.a
         popd
         xcodebuild -create-xcframework \
-            -library opencv-${{ env.OPENCV_VERSION }}/build-ios/install/lib/libopencv.a \
-            -library opencv-${{ env.OPENCV_VERSION }}/build-simulator/install/lib/libopencv.a \
+            -library opencv-4.6.0/build-ios/install/lib/libopencv.a \
+            -library opencv-4.6.0/build-simulator/install/lib/libopencv.a \
             -output opencv2.xcframework
         zip -q9yr ${{ env.PACKAGENAME }}.zip opencv2.xcframework
 
