@@ -41,8 +41,8 @@ jobs:
         mkdir build-ios && cd build-ios
         cmake -DCMAKE_TOOLCHAIN_FILE=../../toolchains/ios.toolchain.cmake \
             -DIOS_PLATFORM=OS -DENABLE_BITCODE=0 -DENABLE_ARC=0 -DENABLE_VISIBILITY=0 -DIOS_ARCH="arm64" \
-            -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=ON \
-            -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
+            -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
+            -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
             ..
         cmake --build . -j 3
         cmake --build . --target install
@@ -52,8 +52,8 @@ jobs:
         mkdir build-simulator && cd build-simulator
         cmake -DCMAKE_TOOLCHAIN_FILE=../../toolchains/ios.toolchain.cmake \
             -DIOS_PLATFORM=SIMULATOR -DENABLE_BITCODE=0 -DENABLE_ARC=0 -DENABLE_VISIBILITY=0 -DIOS_ARCH="x86_64;arm64" \
-            -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=ON \
-            -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
+            -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
+            -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
             ..
         cmake --build . -j 3
         cmake --build . --target install

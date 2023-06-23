@@ -1,10 +1,10 @@
 name: android-min
 
-on: [pull_request,workflow_dispatch]
-# on:
-#   push:
-#     tags:
-#       - '*'
+# on: [pull_request,workflow_dispatch]
+on:
+  push:
+    tags:
+      - '*'
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
@@ -43,7 +43,7 @@ jobs:
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="armeabi-v7a" -DANDROID_ARM_NEON=ON -DANDROID_PLATFORM=android-24 \
             -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
-            -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
+            -DBUILD_opencv_java=ON -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
             ..
         cmake --build . -j 2
         cmake --build . --target install
@@ -54,7 +54,7 @@ jobs:
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="arm64-v8a" -DANDROID_PLATFORM=android-24 \
             -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
-            -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON -DOPENCV_EXTRA_FLAGS="-mno-outline-atomics" -DBUILD_SHARED_LIBS=ON \
+            -DBUILD_opencv_java=ON -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON -DOPENCV_EXTRA_FLAGS="-mno-outline-atomics" \
             ..
         cmake --build . -j 2
         cmake --build . --target install
@@ -65,7 +65,7 @@ jobs:
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="x86" -DANDROID_PLATFORM=android-24 \
             -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
-            -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
+            -DBUILD_opencv_java=ON -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
             ..
         cmake --build . -j 2
         cmake --build . --target install
@@ -76,7 +76,7 @@ jobs:
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="x86_64" -DANDROID_PLATFORM=android-24 \
             -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
-            -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON -DBUILD_SHARED_LIBS=ON \
+            -DBUILD_opencv_java=ON -DBUILD_opencv_world=ON -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
             ..
         cmake --build . -j 2
         cmake --build . --target install
@@ -88,7 +88,7 @@ jobs:
         cp -rf opencv-${{ env.OPENCV_VERSION }}/build-x86/install/* ${{ env.PACKAGENAME }}/
         cp -rf opencv-${{ env.OPENCV_VERSION }}/build-x86_64/install/* ${{ env.PACKAGENAME }}/
         rm -rf ${{ env.PACKAGENAME }}/sdk/etc ${{ env.PACKAGENAME }}/sdk/native/3rdparty
-        rm -f ${{ env.PACKAGENAME }}/sdk/native/jni/*.mk ${{ env.PACKAGENAME }}/sdk/native/jni/android.toolchain.cmake
+        # rm -f ${{ env.PACKAGENAME }}/sdk/native/jni/*.mk ${{ env.PACKAGENAME }}/sdk/native/jni/android.toolchain.cmake
         zip -q9r ${{ env.PACKAGENAME }}.zip ${{ env.PACKAGENAME }}
     - name: upload
       uses: actions/upload-artifact@v3
