@@ -1,4 +1,4 @@
-name: release-all
+name: webasm
 # on: [pull_request,workflow_dispatch]
 on:
   push:
@@ -22,7 +22,6 @@ jobs:
   webassembly-opencv4:
     runs-on: ubuntu-20.04
     env:
-      OPENCV_VERSION: 4.6.0
       PACKAGENAME: opencv-mobile-4.6.0-webassembly
     steps:
     - uses: actions/checkout@v3
@@ -34,65 +33,67 @@ jobs:
         ./emsdk activate $EMSCRIPTEN_VERSION
     - name: opencv-source
       run: |
-        wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
-        unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
-        cd opencv-${{ env.OPENCV_VERSION }}
+        wget -q https://github.com/opencv/opencv/archive/4.6.0.zip -O opencv-4.6.0.zip
+        unzip -q opencv-4.6.0.zip
+        cd opencv-4.6.0
         echo -n > cmake/OpenCVFindLibsGrfmt.cmake
         patch -p1 -i ../opencv-4.6.0-no-zlib.patch
     - name: build
       run: |
         source emsdk/emsdk_env.sh
-        cd opencv-${{ env.OPENCV_VERSION }}
+        cd opencv-4.6.0
         patch -p1 -i ../opencv-4.6.0-unsafe-xadd.patch
         mkdir build && cd build
         cmake -DCMAKE_TOOLCHAIN_FILE=../emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
             -DCPU_BASELINE="" -DCPU_DISPATCH="" -DWITH_PTHREADS_PF=OFF -DCV_ENABLE_INTRINSICS=OFF -DBUILD_WASM_INTRIN_TESTS=OFF \
-            -DCMAKE_C_FLAGS="-s WASM=1" -DCMAKE_CXX_FLAGS="-s WASM=1" \
-            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=OFF -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON ..
+            -DCMAKE_C_FLAGS="-s WASM=1" -DCMAKE_CXX_FLAGS="-s WASM=1" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install \
+            `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=OFF -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON ..
         cmake --build . -j 2
         cmake --build . --target install
     - name: build-simd
       run: |
         source emsdk/emsdk_env.sh
-        cd opencv-${{ env.OPENCV_VERSION }}
+        cd opencv-4.6.0
         mkdir build-simd && cd build-simd
         cmake -DCMAKE_TOOLCHAIN_FILE=../emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
             -DCPU_BASELINE="" -DCPU_DISPATCH="" -DWITH_PTHREADS_PF=OFF -DCV_ENABLE_INTRINSICS=ON -DBUILD_WASM_INTRIN_TESTS=OFF \
-            -DCMAKE_C_FLAGS="-s WASM=1 -msimd128" -DCMAKE_CXX_FLAGS="-s WASM=1 -msimd128" \
-            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=OFF -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON ..
+            -DCMAKE_C_FLAGS="-s WASM=1 -msimd128" -DCMAKE_CXX_FLAGS="-s WASM=1 -msimd128" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install \
+            `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=OFF -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON ..
         cmake --build . -j 2
         cmake --build . --target install
     - name: build-threads
       run: |
         source emsdk/emsdk_env.sh
-        cd opencv-${{ env.OPENCV_VERSION }}
+        cd opencv-4.6.0
         patch -p1 -R -i ../opencv-4.6.0-unsafe-xadd.patch
         mkdir build-threads && cd build-threads
         cmake -DCMAKE_TOOLCHAIN_FILE=../emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
             -DCPU_BASELINE="" -DCPU_DISPATCH="" -DWITH_PTHREADS_PF=ON -DCV_ENABLE_INTRINSICS=OFF -DBUILD_WASM_INTRIN_TESTS=OFF \
             -DCMAKE_C_FLAGS="-s WASM=1 -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=4" -DCMAKE_CXX_FLAGS="-s WASM=1 -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=4" \
-            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=OFF -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON ..
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install \
+            `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=OFF -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON ..
         cmake --build . -j 2
         cmake --build . --target install
     - name: build-simd-threads
       run: |
         source emsdk/emsdk_env.sh
-        cd opencv-${{ env.OPENCV_VERSION }}
+        cd opencv-4.6.0
         mkdir build-simd-threads && cd build-simd-threads
         cmake -DCMAKE_TOOLCHAIN_FILE=../emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake \
             -DCPU_BASELINE="" -DCPU_DISPATCH="" -DWITH_PTHREADS_PF=ON -DCV_ENABLE_INTRINSICS=ON -DBUILD_WASM_INTRIN_TESTS=OFF \
             -DCMAKE_C_FLAGS="-s WASM=1 -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=4 -msimd128" -DCMAKE_CXX_FLAGS="-s WASM=1 -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=4 -msimd128" \
-            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=OFF -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON ..
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install \
+            `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=OFF -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON ..
         cmake --build . -j 2
         cmake --build . --target install
     - name: package
       run: |
         rm -rf ${{ env.PACKAGENAME }}
         mkdir -p ${{ env.PACKAGENAME }}
-        cp -rf opencv-${{ env.OPENCV_VERSION }}/build/install ${{ env.PACKAGENAME }}/basic
-        cp -rf opencv-${{ env.OPENCV_VERSION }}/build-simd/install ${{ env.PACKAGENAME }}/simd
-        cp -rf opencv-${{ env.OPENCV_VERSION }}/build-threads/install ${{ env.PACKAGENAME }}/threads
-        cp -rf opencv-${{ env.OPENCV_VERSION }}/build-simd-threads/install ${{ env.PACKAGENAME }}/simd-threads
+        cp -rf opencv-4.6.0/build/install ${{ env.PACKAGENAME }}/basic
+        cp -rf opencv-4.6.0/build-simd/install ${{ env.PACKAGENAME }}/simd
+        cp -rf opencv-4.6.0/build-threads/install ${{ env.PACKAGENAME }}/threads
+        cp -rf opencv-4.6.0/build-simd-threads/install ${{ env.PACKAGENAME }}/simd-threads
         rm -rf ${{ env.PACKAGENAME }}/basic/share/opencv4
         rm -rf ${{ env.PACKAGENAME }}/simd/share/opencv4
         rm -rf ${{ env.PACKAGENAME }}/threads/share/opencv4
