@@ -1,5 +1,4 @@
-name: android-min
-
+name: android4-min
 on: [pull_request,workflow_dispatch]
 # on:
 #   push:

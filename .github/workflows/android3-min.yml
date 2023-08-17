@@ -1,5 +1,4 @@
 name: android3-min
-
 #on: [push, pull_request,workflow_dispatch]
 on:
   push:
