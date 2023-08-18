@@ -18,7 +18,7 @@
 -DBUILD_opencv_gapi=OFF
 -DBUILD_opencv_gpu=OFF
 -DBUILD_opencv_highgui=OFF
--DBUILD_opencv_java=OFF
+-DBUILD_opencv_java=ON
 -DBUILD_opencv_js=OFF
 -DBUILD_opencv_legacy=OFF
 -DBUILD_opencv_ml=OFF
@@ -35,6 +35,7 @@
 -DBUILD_opencv_video=OFF
 -DBUILD_opencv_videoio=OFF
 -DBUILD_opencv_videostab=OFF
+-DBUILD_opencv_world=ON
 -DBUILD_OPENEXR=OFF
 -DBUILD_OPENJPEG=OFF
 -DBUILD_PACKAGE=OFF
