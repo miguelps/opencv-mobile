@@ -7,7 +7,7 @@
 -DBUILD_IPP_IW=OFF
 -DBUILD_ITT=OFF
 -DBUILD_JASPER=OFF
--DBUILD_JAVA=ON
+-DBUILD_JAVA=OFF
 -DBUILD_JPEG=ON
 -DBUILD_OBJC=OFF
 -DBUILD_opencv_apps=OFF
@@ -18,7 +18,7 @@
 -DBUILD_opencv_gapi=OFF
 -DBUILD_opencv_gpu=OFF
 -DBUILD_opencv_highgui=OFF
--DBUILD_opencv_java=ON
+-DBUILD_opencv_java=Off
 -DBUILD_opencv_js=OFF
 -DBUILD_opencv_legacy=OFF
 -DBUILD_opencv_ml=OFF
