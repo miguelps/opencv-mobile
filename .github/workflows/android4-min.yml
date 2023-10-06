@@ -41,7 +41,7 @@ jobs:
         mkdir build-armeabi-v7a && cd build-armeabi-v7a
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="armeabi-v7a" -DANDROID_ARM_NEON=ON -DANDROID_PLATFORM=android-24 \
-            -DBUILD_opencv_world=ON -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` \
+            -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` \
             -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
             ..
         cmake --build . -j 2
@@ -52,7 +52,7 @@ jobs:
         mkdir build-arm64-v8a && cd build-arm64-v8a
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="arm64-v8a" -DANDROID_PLATFORM=android-24 \
-            -DBUILD_opencv_world=ON -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` \
+            -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` \
             -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON -DOPENCV_EXTRA_FLAGS="-mno-outline-atomics" \
             ..
         cmake --build . -j 2
@@ -63,7 +63,7 @@ jobs:
         mkdir build-x86 && cd build-x86
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="x86" -DANDROID_PLATFORM=android-24 \
-            -DBUILD_opencv_world=ON -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` \
+            -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` \
             -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
             ..
         cmake --build . -j 2
@@ -74,7 +74,7 @@ jobs:
         mkdir build-x86_64 && cd build-x86_64
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="x86_64" -DANDROID_PLATFORM=android-24 \
-            -DBUILD_opencv_world=ON -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` \
+            -DCMAKE_INSTALL_PREFIX=install `cat ../../opencv4_cmake_options.txt` \
             -DOPENCV_DISABLE_FILESYSTEM_SUPPORT=ON \
             ..
         cmake --build . -j 2
