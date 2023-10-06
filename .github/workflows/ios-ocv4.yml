@@ -1,10 +1,10 @@
 name: ios-opencv4
 
-# on: [pull_request, workflow_dispatch]
-on:
-  push:
-    tags:
-      - '*'
+on: [pull_request, workflow_dispatch]
+# on:
+#   push:
+#     tags:
+#       - '*'
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
