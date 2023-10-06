@@ -1,4 +1,5 @@
-name: webasm
+name: webassembly-opencv4
+
 on: [pull_request, workflow_dispatch]
 # on:
 #   push:
