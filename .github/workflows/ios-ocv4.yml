@@ -1,10 +1,10 @@
 name: ios-opencv4
 
-on: [pull_request, workflow_dispatch]
-# on:
-#   push:
-#     tags:
-#       - '*'
+# on: [pull_request, workflow_dispatch]
+on:
+  push:
+    tags:
+      - '*'
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
@@ -44,7 +44,6 @@ jobs:
         wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
         unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
         cd opencv-${{ env.OPENCV_VERSION }}
-        echo -n > cmake/OpenCVFindLibsGrfmt.cmake
         rm -rf modules/gapi
         patch -p1 -i ../opencv-4.8.0-no-zlib.patch
         patch -p1 -i ../opencv-4.8.0-link-openmp.patch
@@ -82,7 +81,7 @@ jobs:
         cp -r opencv-${{ env.OPENCV_VERSION }}/build-arm64/install/include/opencv4/opencv2/* opencv2.framework/Versions/A/Headers/
         sed -e 's/__NAME__/OpenCV/g' -e 's/__IDENTIFIER__/org.opencv/g' -e 's/__VERSION__/${{ env.OPENCV_VERSION }}/g' Info.plist > opencv2.framework/Versions/A/Resources/Info.plist
         rm -f ${{ env.PACKAGENAME }}.zip
-        zip -9 -y -r ${{ env.PACKAGENAME }}.zip opencv2.framework
+        zip -9yr ${{ env.PACKAGENAME }}.zip opencv2.framework
     - name: upload-zip
       uses: actions/upload-artifact@v3
       with:
@@ -101,7 +100,6 @@ jobs:
         wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
         unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
         cd opencv-${{ env.OPENCV_VERSION }}
-        echo -n > cmake/OpenCVFindLibsGrfmt.cmake
         rm -rf modules/gapi
         patch -p1 -i ../opencv-4.8.0-no-zlib.patch
         patch -p1 -i ../opencv-4.8.0-link-openmp.patch
@@ -139,7 +137,7 @@ jobs:
         cp -r opencv-${{ env.OPENCV_VERSION }}/build-x86_64/install/include/opencv4/opencv2/* opencv2.framework/Versions/A/Headers/
         sed -e 's/__NAME__/OpenCV/g' -e 's/__IDENTIFIER__/org.opencv/g' -e 's/__VERSION__/${{ env.OPENCV_VERSION }}/g' Info.plist > opencv2.framework/Versions/A/Resources/Info.plist
         rm -f ${{ env.PACKAGENAME }}.zip
-        zip -9 -y -r ${{ env.PACKAGENAME }}.zip opencv2.framework
+        zip -9yr ${{ env.PACKAGENAME }}.zip opencv2.framework
     - name: upload-zip
       uses: actions/upload-artifact@v3
       with:
@@ -158,7 +156,6 @@ jobs:
         wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
         unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
         cd opencv-${{ env.OPENCV_VERSION }}
-        echo -n > cmake/OpenCVFindLibsGrfmt.cmake
         rm -rf modules/gapi
         patch -p1 -i ../opencv-4.8.0-no-zlib.patch
         patch -p1 -i ../opencv-4.8.0-link-openmp.patch
@@ -193,7 +190,7 @@ jobs:
         cp -r opencv-${{ env.OPENCV_VERSION }}/build-x86_64/install/include/opencv4/opencv2/* opencv2.framework/Versions/A/Headers/
         sed -e 's/__NAME__/OpenCV/g' -e 's/__IDENTIFIER__/org.opencv/g' -e 's/__VERSION__/${{ env.OPENCV_VERSION }}/g' Info.plist > opencv2.framework/Versions/A/Resources/Info.plist
         rm -f ${{ env.PACKAGENAME }}.zip
-        zip -9 -y -r ${{ env.PACKAGENAME }}.zip opencv2.framework
+        zip -9yr ${{ env.PACKAGENAME }}.zip opencv2.framework
     - name: upload-zip
       uses: actions/upload-artifact@v3
       with:
@@ -201,7 +198,7 @@ jobs:
         path: ${{ env.PACKAGENAME }}.zip
 
   apple-opencv4:
-    needs: [ios-opencv4, ios-simulator-opencv4, macos-opencv4]
+    needs: [ios-opencv4, ios-simulator-opencv4]
     runs-on: macos-12
     env:
       OPENCV_VERSION: 4.8.0
@@ -214,16 +211,13 @@ jobs:
         path: artifacts
     - name: create-xcframwork
       run: |
-        mkdir -p opencv-mobile-macos
         mkdir -p opencv-mobile-ios
         mkdir -p opencv-mobile-ios-simulator
 
-        unzip -q artifacts/opencv-mobile-${{ env.OPENCV_VERSION }}-macos/opencv-mobile-${{ env.OPENCV_VERSION }}-macos.zip -d opencv-mobile-macos
         unzip -q artifacts/opencv-mobile-${{ env.OPENCV_VERSION }}-ios/opencv-mobile-${{ env.OPENCV_VERSION }}-ios.zip -d opencv-mobile-ios
         unzip -q artifacts/opencv-mobile-${{ env.OPENCV_VERSION }}-ios-simulator/opencv-mobile-${{ env.OPENCV_VERSION }}-ios-simulator.zip -d opencv-mobile-ios-simulator
 
         xcodebuild -create-xcframework \
-            -framework opencv-mobile-macos/opencv2.framework \
             -framework opencv-mobile-ios/opencv2.framework \
             -framework opencv-mobile-ios-simulator/opencv2.framework \
             -output opencv2.xcframework
@@ -239,7 +233,7 @@ jobs:
   release:
     permissions:
       contents: write
-    needs: [setup, ios-opencv4, ios-simulator-opencv4, macos-opencv4, apple-opencv4]
+    needs: [setup, ios-opencv4, ios-simulator-opencv4, apple-opencv4]
     runs-on: ubuntu-latest
     steps:
     - name: download
