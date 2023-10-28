@@ -55,7 +55,7 @@ jobs:
             -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="armeabi-v7a" -DANDROID_ARM_NEON=ON -DANDROID_PLATFORM=android-24 -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
-            -DBUILD_opencv_world=OFF ..
+            -DBUILD_opencv_world=ON ..
         cmake --build . -j 2
         cmake --build . --target install
     - name: build-arm64-v8a
@@ -66,7 +66,7 @@ jobs:
         -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="arm64-v8a" -DANDROID_PLATFORM=android-24 -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
-            -DBUILD_opencv_world=OFF -DOPENCV_EXTRA_FLAGS="-mno-outline-atomics" ..
+            -DBUILD_opencv_world=ON -DOPENCV_EXTRA_FLAGS="-mno-outline-atomics" ..
         cmake --build . -j 2
         cmake --build . --target install
     - name: build-x86
@@ -77,7 +77,7 @@ jobs:
         -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="x86" -DANDROID_PLATFORM=android-24 -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
-            -DBUILD_opencv_world=OFF ..
+            -DBUILD_opencv_world=ON ..
         cmake --build . -j 2
         cmake --build . --target install
     - name: build-x86_64
@@ -87,7 +87,7 @@ jobs:
         cmake -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
             -DANDROID_ABI="x86_64" -DANDROID_PLATFORM=android-24 -DBUILD_SHARED_LIBS=OFF \
             -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` \
-            -DBUILD_opencv_world=OFF ..
+            -DBUILD_opencv_world=ON ..
         cmake --build . -j 2
         cmake --build . --target install
     - name: package
