@@ -11,11 +11,11 @@
 -DBUILD_JPEG=ON
 -DBUILD_OBJC=OFF
 -DBUILD_opencv_apps=OFF
--DBUILD_opencv_calib3d=OFF
+-DBUILD_opencv_calib3d=ON
 -DBUILD_opencv_core=ON
 -DBUILD_opencv_dnn=ON
--DBUILD_opencv_features2d=OFF
--DBUILD_opencv_flann=OFF
+-DBUILD_opencv_features2d=ON
+-DBUILD_opencv_flann=ON
 -DBUILD_opencv_gapi=OFF
 -DBUILD_opencv_highgui=OFF
 -DBUILD_opencv_imgcodecs=ON
