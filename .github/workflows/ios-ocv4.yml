@@ -53,7 +53,6 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=install -DCMAKE_BUILD_TYPE=Release `cat ../../opencv4_cmake_options.txt` -DBUILD_opencv_world=ON ..
         cmake --build . -j 3
         cmake --build . --target install
-        tree
     - name: build-arm64e
       run: |
         cd opencv-${{ env.OPENCV_VERSION }}
@@ -65,7 +64,6 @@ jobs:
         cmake --build . --target install
     - name: package
       run: |
-        tree opencv-${{ env.OPENCV_VERSION }}/build-arm64/install
         rm -rf opencv2.framework
         mkdir -p opencv2.framework/Versions/A/Headers
         mkdir -p opencv2.framework/Versions/A/Resources
@@ -120,7 +118,6 @@ jobs:
         cmake --build . --target install
     - name: package
       run: |
-        tree opencv-${{ env.OPENCV_VERSION }}/build-arm64/install
         rm -rf opencv2.framework
         mkdir -p opencv2.framework/Versions/A/Headers
         mkdir -p opencv2.framework/Versions/A/Resources
