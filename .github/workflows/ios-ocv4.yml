@@ -43,7 +43,6 @@ jobs:
         wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
         unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
         cd opencv-${{ env.OPENCV_VERSION }}
-        rm -rf modules/gapi
     - name: build-arm64
       run: |
         cd opencv-${{ env.OPENCV_VERSION }}
@@ -97,7 +96,6 @@ jobs:
         wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
         unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
         cd opencv-${{ env.OPENCV_VERSION }}
-        rm -rf modules/gapi
     - name: build-x86_64
       run: |
         cd opencv-${{ env.OPENCV_VERSION }}
