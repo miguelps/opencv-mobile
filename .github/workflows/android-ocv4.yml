@@ -37,7 +37,7 @@ jobs:
     env:
       OPENCV_VERSION: 4.8.0
       PACKAGENAME: opencv-mobile-4.8.0-android
-      A_PLATFORM: android-23
+      A_PLATFORM: android-21
     steps:
     - uses: actions/checkout@v3
     - name: ndk-fix-debug
