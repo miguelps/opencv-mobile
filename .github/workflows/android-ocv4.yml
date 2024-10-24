@@ -52,6 +52,8 @@ jobs:
         unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
         cd opencv-${{ env.OPENCV_VERSION }}
         rm -rf modules/gapi
+        rm -rf modules/highgui
+        cp -r ../highgui modules/
     - name: build-armeabi-v7a
       run: |
         cd opencv-${{ env.OPENCV_VERSION }}
