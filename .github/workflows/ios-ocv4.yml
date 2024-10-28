@@ -41,7 +41,6 @@ jobs:
       run: |
         wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
         unzip -q opencv-${{ env.OPENCV_VERSION }}.zip
-        cd opencv-${{ env.OPENCV_VERSION }}
     - name: build-arm64
       run: |
         cd opencv-${{ env.OPENCV_VERSION }}
@@ -79,8 +78,8 @@ jobs:
         --out build
     - name: package
       run: |
-        cd build
-        zip -9yr ../${{ env.PACKAGENAME }}.zip opencv2.xcframework
+        cd opencv-${{ env.OPENCV_VERSION }}/build
+        zip -9yr ../../${{ env.PACKAGENAME }}.zip opencv2.xcframework
     - name: upload-zip
       uses: actions/upload-artifact@v3
       with:
