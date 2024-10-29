@@ -32,11 +32,12 @@ jobs:
 
   mobile-opencv4:
     runs-on: macos-12
+    needs: [setup]
     env:
       OPENCV_VERSION: 4.8.0
-      PACKAGENAME: opencv-mobile-4.8.0
+      PACKAGENAME: opencv-ios-4.8.0-${{ needs.setup.outputs.VERSION }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: opencv-source
       run: |
         wget -q https://github.com/opencv/opencv/archive/${{ env.OPENCV_VERSION }}.zip -O opencv-${{ env.OPENCV_VERSION }}.zip
@@ -81,7 +82,7 @@ jobs:
         cd opencv-${{ env.OPENCV_VERSION }}/build
         zip -9yr ../../${{ env.PACKAGENAME }}.zip opencv2.xcframework
     - name: upload-zip
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ env.PACKAGENAME }}
         path: ${{ env.PACKAGENAME }}.zip
@@ -93,11 +94,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: download
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: artifacts
     - name: create-release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag_name: ${{ needs.setup.outputs.VERSION }}
