@@ -1,4 +1,5 @@
-name: ios-opencv4
+name: ios
+
 # on: [pull_request, workflow_dispatch]
 on:
   push:
@@ -20,8 +21,6 @@ permissions:
 
 jobs:
   setup:
-    permissions:
-      contents: none
     runs-on: ubuntu-latest
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
@@ -35,7 +34,7 @@ jobs:
     needs: [setup]
     env:
       OPENCV_VERSION: 4.8.0
-      PACKAGENAME: opencv-ios-4.8.0-${{ needs.setup.outputs.VERSION }}
+      PACKAGENAME: opencv-4.8.0-ios-${{ needs.setup.outputs.VERSION }}
     steps:
     - uses: actions/checkout@v4
     - name: opencv-source

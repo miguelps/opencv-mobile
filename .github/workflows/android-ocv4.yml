@@ -1,17 +1,16 @@
 name: android
 
-on: [pull_request, workflow_dispatch]
-# on:
-#   push:
-#     tags:
-#       - '*'
+# on: [pull_request, workflow_dispatch]
+on:
+  push:
+    tags:
+      - '*'
 
 env:
   DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
   IOS_DEPLOYMENT_TARGET: '9.0'
   MAC_DEPLOYMENT_TARGET: '10.9'
   MAC_ARM64_DEPLOYMENT_TARGET: '11.0'
-  MAC_CATALYST_DEPLOYMENT_TARGET: '13.1'
   ENABLE_BITCODE: OFF
   ENABLE_ARC: OFF
   ENABLE_VISIBILITY: OFF
@@ -35,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPENCV_VERSION: 4.8.0
-      PACKAGE_NAME: opencv-mobile-4.8.0-android
+      PACKAGE_NAME: opencv-4.8.0-android-${{ needs.setup.outputs.VERSION }}
       COMMON_CMAKE_OPTIONS: |
         -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_LATEST_HOME/build/cmake/android.toolchain.cmake \
         -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=False \
